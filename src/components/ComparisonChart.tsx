@@ -13,8 +13,8 @@ export const ComparisonChart = ({
     company2Data
 }: ComparisonChartProps) => {
     // 1. Define categories and their metrics (keys must match company1Metrics/company2Metrics)
-    const company1Name = company1Data?.price?.symbol
-    const company2Name = company2Data?.price?.symbol
+    const company1Name = company1Data?.price?.symbol!
+    const company2Name = company2Data?.price?.symbol!
     const company1Metrics: CompanyMetrics = {
         "marketCap": company1Data?.summaryDetail?.marketCap,
         "totalRevenue": company1Data?.financialData?.totalRevenue,
