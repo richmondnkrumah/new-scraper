@@ -53,31 +53,34 @@ const CompanyCard = ({ data }: Props) => {
 
 
     return (
-        <div className='w-full flex flex-col gap-5  '>
-            <div className='h-fit'>
-                <div className="border-gray-200 h-full p-3 rounded-xl bg-gray-100">
-                    {Object.entries(summarizedData).map(([key, value]) => (
-                        <div key={key} className="flex gap-2">
-                            <span className="text-md font-semibold text-gray-600">{key}: </span>
-                            <p className="text-base text-black">{String(value)}</p>
-                        </div>
-                    ))}
+        <div>
+            <div className='w-full flex flex-col gap-5  '>
+                <div className='h-fit'>
+                    <div className="border-gray-200 h-full p-3 rounded-xl bg-gray-100">
+                        {Object.entries(summarizedData).map(([key, value]) => (
+                            <div key={key} className="flex gap-2">
+                                <span className="text-md font-semibold text-gray-600">{key}: </span>
+                                <p className="text-base text-black">{String(value)}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
+                <span className="cursor-pointer underline text-blue-500" onClick={() => setShowDetails(prev => !prev)}>click to see more</span>
+                {
+                    showDetails &&
+                    <div className="border-gray-200 p-3 rounded-xl bg-gray-100">
+                        <h2 className='text-xl text-gray-600 font-bold'>Additional Details</h2>
+                        {Object.entries(additionalDetailsData).map(([key, value]) => (
+                            <div key={key} className="flex gap-2">
+                                <span className="text-md font-semibold text-gray-600">{key}: </span>
+                                <p className="text-base text-black">{String(value)}</p>
+                            </div>
+                        ))}
+                    </div>
+                }
             </div>
-            <span className="cursor-pointer underline text-blue-500" onClick={() => setShowDetails(prev => !prev)}>click to see more</span>
-            {
-                showDetails &&
-                <div className="border-gray-200 p-3 rounded-xl bg-gray-100">
-                    <h2 className='text-xl text-gray-600 font-bold'>Additional Details</h2>
-                    {Object.entries(additionalDetailsData).map(([key, value]) => (
-                        <div key={key} className="flex gap-2">
-                            <span className="text-md font-semibold text-gray-600">{key}: </span>
-                            <p className="text-base text-black">{String(value)}</p>
-                        </div>
-                    ))}
-                </div>
-            }
         </div>
+
     )
 }
 

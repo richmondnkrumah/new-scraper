@@ -2,6 +2,8 @@
 import { useState, type FormEvent } from "react";
 import CompanyCard from "@/components/CompanyCard";
 import { getTickerFromCompanyName, getCompanyData } from "@/lib/utils";
+import CompanyBasic from "@/components/CompanyBasic";
+import CompanyAdditional from "@/components/CompanyAdditional";
 
 
 export type _company_data = Awaited<ReturnType<typeof getCompanyData>>
@@ -74,12 +76,18 @@ const page = () => {
       }
       {
         (company1Data && company2Data) &&
-        <div className="grid grid-cols-2 p-4 gap-x-[90px]">
-          <CompanyCard data={company1Data} />
-          <CompanyCard data={company2Data} />
+        <div className="">
+          <div className="grid grid-cols-2 p-4 gap-x-[90px] ">
+            <CompanyBasic data={company1Data} />
+            <CompanyBasic data={company2Data} />
+          </div>
+          <div className="grid grid-cols-2 p-4 gap-x-[90px]">
+            <CompanyAdditional data={company1Data} />
+            <CompanyAdditional data={company2Data} />
+          </div>
         </div>
       }
-      
+
     </div>
   )
 }
