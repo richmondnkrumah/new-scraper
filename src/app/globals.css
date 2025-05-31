@@ -1,2 +1,30 @@
 @import "tailwindcss";
 
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 60px;
+  aspect-ratio: 1;
+  display: grid;
+  color: #090eff;
+  background: radial-gradient(farthest-side, currentColor calc(100% - 6px),#0615f300 calc(100% - 5px) 0);
+  -webkit-mask: radial-gradient(farthest-side,#1a16f700 calc(100% - 13px),#3e09ff calc(100% - 12px));
+  border-radius: 50%;
+  animation: l19 2s infinite linear;
+}
+.loader::before,
+.loader::after {    
+  content: "";
+  grid-area: 1/1;
+  background:
+    linear-gradient(currentColor 0 0) center,
+    linear-gradient(currentColor 0 0) center;
+  background-size: 100% 10px,10px 100%;
+  background-repeat: no-repeat;
+}
+.loader::after {
+   transform: rotate(45deg);
+}
+
+@keyframes l19 { 
+  100%{transform: rotate(1turn)}
+}

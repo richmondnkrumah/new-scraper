@@ -13,7 +13,7 @@ const page = () => {
   const [company2, setCompany2] = useState<string>("");
   const [company1Data, setCompany1Data] = useState<_company_data>(null)
   const [company2Data, setCompany2Data] = useState<_company_data>(null)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
 
 
   const backgroundColors: { [companyName: string]: string } = {};
@@ -40,7 +40,7 @@ const page = () => {
     console.log(company2Data)
   }
   return (
-    <div className="max-w-7xl mx-auto p-4">
+    <div className="max-w-7xl mx-auto p-4 flex flex-col min-h-[100dvh]">
       <h1 className="font-bold mb-6 text-center text-4xl">Competitor Comparison</h1>
       <div className="w-full p-4 ">
         <form className="flex gap-5 " onSubmit={getCompetitiveAnalysis}>
@@ -71,7 +71,10 @@ const page = () => {
 
       </div>
       {
-        loading && <p>Loading</p>
+        loading && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center"> 
+          <div className="loader"></div>
+          <p className="text-xl font-semibold text-gray-800">Getting Data</p>
+        </div>
 
       }
       {
@@ -81,7 +84,7 @@ const page = () => {
             <CompanyBasic data={company1Data} />
             <CompanyBasic data={company2Data} />
           </div>
-          <div className="grid grid-cols-2 p-4 gap-x-[90px]">
+          <div className="grid grid-cols-2 p-6 gap-x-[90px]">
             <CompanyAdditional data={company1Data} />
             <CompanyAdditional data={company2Data} />
           </div>
