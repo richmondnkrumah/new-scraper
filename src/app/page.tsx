@@ -1,103 +1,87 @@
-import Image from "next/image";
+'use client'
+import { useState, type FormEvent } from "react";
+import CompanyCard from "@/components/CompanyCard";
+import { getTickerFromCompanyName, getCompanyData } from "@/lib/utils";
 
-export default function Home() {
+
+export type _company_data = Awaited<ReturnType<typeof getCompanyData>>
+
+const page = () => {
+  const [company1, setCompany1] = useState<string>("");
+  const [company2, setCompany2] = useState<string>("");
+  const [company1Data, setCompany1Data] = useState<_company_data>(null)
+  const [company2Data, setCompany2Data] = useState<_company_data>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+
+
+  const backgroundColors: { [companyName: string]: string } = {};
+  if (!company1) backgroundColors["Apple Inc."] = '#60a5fa';
+  if (!company2) backgroundColors["Microsoft Corporation"] = '#f87171';
+
+  const getCompetitiveAnalysis = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    const company1TickerSymbol = await getTickerFromCompanyName(company1)
+    const company2TickerSymbol = await getTickerFromCompanyName(company2)
+    console.log(company1TickerSymbol)
+    console.log(company2TickerSymbol)
+    if (company1TickerSymbol) {
+      const company1DataResult = await getCompanyData(company1TickerSymbol)
+      setCompany1Data(company1DataResult)
+    }
+    if (company2TickerSymbol) {
+      const company2DataResult = await getCompanyData(company2TickerSymbol)
+      setCompany2Data(company2DataResult)
+    }
+    setLoading(false)
+    console.log(company1Data)
+    console.log(company2Data)
+  }
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    <div className="max-w-7xl mx-auto p-4">
+      <h1 className="font-bold mb-6 text-center text-4xl">Competitor Comparison</h1>
+      <div className="w-full p-4 ">
+        <form className="flex gap-5 " onSubmit={getCompetitiveAnalysis}>
+          <div className="grow">
+            <label className="block text-lg mb-2 font-semibold">Company 1</label>
+            <input
+              type="text"
+              required
+              placeholder="Enter company name"
+              className="w-full border border-gray-200 p-3 rounded-xl bg-gray-100 outline-none"
+              value={company1}
+              onChange={e => setCompany1(e.target.value)}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <button className="bg-blue-500 font-semibold w-fit self-end  p-3 rounded-lg text-white">Compare</button>
+          <div className="grow">
+            <label className="block text-lg mb-2 font-semibold">Company 2</label>
+            <input
+              type="text"
+              required
+              placeholder="Enter company name"
+              className="w-full border border-gray-200 p-3 rounded-xl bg-gray-100 outline-none"
+              value={company2}
+              onChange={e => setCompany2(e.target.value)}
+            />
+          </div>
+        </form>
+
+      </div>
+      {
+        loading && <p>Loading</p>
+
+      }
+      {
+        (company1Data && company2Data) &&
+        <div className="grid grid-cols-2 p-4 gap-x-[90px]">
+          <CompanyCard data={company1Data} />
+          <CompanyCard data={company2Data} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      }
+      
     </div>
-  );
+  )
 }
+
+export default page
