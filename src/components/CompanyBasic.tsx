@@ -1,13 +1,16 @@
 'use client'
 import React, { useState } from 'react'
 import type { _company_data } from '@/app/page'
+import Image from 'next/image'
 type Props = {
-    data: _company_data
+    data: _company_data,
+    logo: string
 }
 
-const CompanyBasic = ({ data }: Props) => {
+const CompanyBasic = ({ data,logo }: Props) => {
     const summarizedData = {
         "Company Name": data?.price?.longName,
+        "Industry": data?.summaryProfile?.industry,
         "Website": data?.summaryProfile?.website,
         "Address": data?.summaryProfile?.address1,
         "City": data?.summaryProfile?.city,
@@ -15,18 +18,17 @@ const CompanyBasic = ({ data }: Props) => {
         "Zip": data?.summaryProfile?.zip,
         "Country": data?.summaryProfile?.country,
         "Phone": data?.summaryProfile?.phone,
-        "Industry": data?.summaryProfile?.industry,
         "Sector": data?.summaryProfile?.sector,
-        "Symbol": data?.price?.symbol,
         "Currency": data?.price?.currency,
-        "Full TIme Employees": data?.summaryProfile?.fullTimeEmployees,
-        "Business Summary": data?.summaryProfile?.longBusinessSummary,
+        
     }
-
-
 
     return (
         <div className="border-gray-200 h-full p-3 rounded-xl bg-gray-100">
+            <div className='flex items-center justify-between'>
+                <h2 className="text-xl font-bold text-blue-800">{data?.price?.symbol}</h2>
+                <Image src={logo} width={50} height={50} alt="Company Logo"/>
+            </div>
             {Object.entries(summarizedData).map(([key, value]) => (
                 <div key={key} className="flex gap-2">
                     <span className="text-md font-bold text-black">{key}: </span>
