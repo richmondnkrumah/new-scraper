@@ -29,7 +29,7 @@ const CompanyBasic = ({ data }: Props) => {
         <div className="border-gray-200 h-full p-3 rounded-xl bg-gray-100">
             {Object.entries(summarizedData).map(([key, value]) => (
                 <div key={key} className="flex gap-2">
-                    <span className="text-md font-semibold text-black">{key}: </span>
+                    <span className="text-md font-bold text-black">{key}: </span>
                     <p className="text-base text-black">{String(value)}</p>
                 </div>
             ))}

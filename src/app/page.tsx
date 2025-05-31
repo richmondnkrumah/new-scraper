@@ -13,12 +13,8 @@ const page = () => {
   const [company2, setCompany2] = useState<string>("");
   const [company1Data, setCompany1Data] = useState<_company_data>(null)
   const [company2Data, setCompany2Data] = useState<_company_data>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
 
-
-  const backgroundColors: { [companyName: string]: string } = {};
-  if (!company1) backgroundColors["Apple Inc."] = '#60a5fa';
-  if (!company2) backgroundColors["Microsoft Corporation"] = '#f87171';
 
   const getCompetitiveAnalysis = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()

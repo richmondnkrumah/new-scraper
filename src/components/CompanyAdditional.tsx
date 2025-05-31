@@ -43,7 +43,7 @@ const CompanyAdditional = ({ data }: Props) => {
                     <h2 className='text-2xl text-gray-600 font-bold text-center'>Additional Details</h2>
                     {Object.entries(additionalDetailsData).map(([key, value]) => (
                         <div key={key} className="flex gap-2">
-                            <span className="text-md font-semibold text-black">{key}: </span>
+                            <span className="text-md font-bold text-black">{key}: </span>
                             <p className="text-base text-black">{String(value)}</p>
                         </div>
                     ))}
