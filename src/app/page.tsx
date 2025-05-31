@@ -21,6 +21,8 @@ const page = () => {
 
   const getCompetitiveAnalysis = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setCompany1Data(null)
+    setCompany2Data(null)
     setLoading(true)
     const company1TickerSymbol = await getTickerFromCompanyName(company1)
     const company2TickerSymbol = await getTickerFromCompanyName(company2)
