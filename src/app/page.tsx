@@ -1,9 +1,10 @@
 'use client'
 import { useState, type FormEvent } from "react";
 import CompanyCard from "@/components/CompanyCard";
-import { getTickerFromCompanyName, getCompanyData } from "@/lib/utils";
+import { getTickerFromCompanyName, getCompanyData, getCompanyLogo } from "@/lib/utils";
 import CompanyBasic from "@/components/CompanyBasic";
 import CompanyAdditional from "@/components/CompanyAdditional";
+import ComparisonChart from '@/components/ComparisonChart'
 
 
 export type _company_data = Awaited<ReturnType<typeof getCompanyData>>
@@ -11,6 +12,8 @@ export type _company_data = Awaited<ReturnType<typeof getCompanyData>>
 const page = () => {
   const [company1, setCompany1] = useState<string>("");
   const [company2, setCompany2] = useState<string>("");
+  const [company1Logo, setCompany1Logo] = useState<string>("");
+  const [company2Logo, setCompany2Logo] = useState<string>("");
   const [company1Data, setCompany1Data] = useState<_company_data>(null)
   const [company2Data, setCompany2Data] = useState<_company_data>(null)
   const [loading, setLoading] = useState<boolean>(false)
@@ -25,10 +28,14 @@ const page = () => {
     console.log(company2TickerSymbol)
     if (company1TickerSymbol) {
       const company1DataResult = await getCompanyData(company1TickerSymbol)
+      const company1LogoResult = await getCompanyLogo(company1TickerSymbol)
+      setCompany1Logo(company1LogoResult)
       setCompany1Data(company1DataResult)
     }
     if (company2TickerSymbol) {
       const company2DataResult = await getCompanyData(company2TickerSymbol)
+      const company2LogoResult = await getCompanyLogo(company2TickerSymbol)
+      setCompany2Logo(company2LogoResult)
       setCompany2Data(company2DataResult)
     }
     setLoading(false)
@@ -67,7 +74,7 @@ const page = () => {
 
       </div>
       {
-        loading && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center"> 
+        loading && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center">
           <div className="loader"></div>
           <p className="text-xl font-semibold text-gray-800">Getting Data</p>
         </div>
@@ -76,14 +83,15 @@ const page = () => {
       {
         (company1Data && company2Data) &&
         <div className="">
-          <div className="grid grid-cols-2 p-4 gap-x-[90px] ">
-            <CompanyBasic data={company1Data} />
-            <CompanyBasic data={company2Data} />
+          <div className="grid grid-cols-2 p-4 gap-x-10 ">
+            <CompanyBasic data={company1Data} logo={company1Logo} />
+            <CompanyBasic data={company2Data} logo={company2Logo} />
           </div>
-          <div className="grid grid-cols-2 p-6 gap-x-[90px]">
+          <div className="grid grid-cols-2 p-6 gap-x-10">
             <CompanyAdditional data={company1Data} />
             <CompanyAdditional data={company2Data} />
           </div>
+          <ComparisonChart company1Data={company1Data} company2Data={company2Data} />
         </div>
       }
 
