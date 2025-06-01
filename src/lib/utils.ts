@@ -24,8 +24,6 @@ export async function getCompanyData(companyName: string) {
         ],
     });
 
-    console.log("kk from the other side")
-    console.log(Object.keys(data))
     if (Object.keys(data).length === 0) {
         return null
     }
