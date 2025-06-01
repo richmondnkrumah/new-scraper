@@ -31,6 +31,11 @@ export const ComparisonChart = ({
         "beta": company1Data?.summaryDetail?.beta,
         "heldPercentInstitutions": company1Data?.majorHoldersBreakdown?.institutionsPercentHeld,
         "insidersPercentHeld": company1Data?.majorHoldersBreakdown?.insidersPercentHeld,
+        "grossprofit": company1Data?.financialData?.grossProfits,
+        "employees": company1Data?.summaryProfile?.fullTimeEmployees,
+        "averageVolume": company1Data?.summaryDetail?.averageVolume,
+        "volume": company1Data?.summaryDetail?.volume,
+
     };
     const company2Metrics: CompanyMetrics = {
         "marketCap": company2Data?.summaryDetail?.marketCap,
@@ -48,6 +53,13 @@ export const ComparisonChart = ({
         "beta": company2Data?.summaryDetail?.beta,
         "heldPercentInstitutions": company2Data?.majorHoldersBreakdown?.institutionsPercentHeld,
         "insidersPercentHeld": company2Data?.majorHoldersBreakdown?.insidersPercentHeld,
+        "grossprofit": company2Data?.financialData?.grossProfits,
+        "employees": company2Data?.summaryProfile?.fullTimeEmployees,
+        "averageVolume": company2Data?.summaryDetail?.averageVolume,
+        "volume": company2Data?.summaryDetail?.volume,
+        
+
+
     }
 
     const categories: {
@@ -60,6 +72,7 @@ export const ComparisonChart = ({
                     { key: 'marketCap', label: 'Market Cap' },
                     { key: 'totalRevenue', label: 'Total Revenue' },
                     { key: 'grossMargins', label: 'Gross Margin' },
+                    { key: 'grossProfit', label: 'Gross Profit' },
                     { key: 'profitMargins', label: 'Profit Margin' },
                     { key: 'freeCashflow', label: 'Free Cash Flow' },
                 ],
@@ -77,9 +90,11 @@ export const ComparisonChart = ({
             {
                 heading: 'Growth & Stability',
                 metrics: [
+                    { key: 'employees', label: 'Employees' },
+                    { key: 'volume', label: 'Volume' },
+                    { key: 'averageVolume', label: 'Average Volume' },
                     { key: 'revenueGrowth', label: 'Revenue Growth (%)' },
                     { key: 'earningsGrowth', label: 'Earnings Growth (%)' },
-                    { key: 'beta', label: 'Beta' },
                 ],
             },
             {
