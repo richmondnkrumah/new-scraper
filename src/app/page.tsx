@@ -35,13 +35,13 @@ const page = () => {
       console.log(company2TickerSymbol)
       if (company1TickerSymbol) {
         const company1DataResult = await getCompanyData(company1TickerSymbol)
-        const company1LogoResult = await getCompanyLogo(company1TickerSymbol)
+        const company1LogoResult = await getCompanyLogo(company1)
         setCompany1Logo(company1LogoResult)
         setCompany1Data(company1DataResult)
       }
       if (company2TickerSymbol) {
         const company2DataResult = await getCompanyData(company2TickerSymbol)
-        const company2LogoResult = await getCompanyLogo(company2TickerSymbol)
+        const company2LogoResult = await getCompanyLogo(company2)
         setCompany2Logo(company2LogoResult)
         setCompany2Data(company2DataResult)
       }
