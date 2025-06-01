@@ -15,26 +15,9 @@ const CompanyAdditional = ({ data }: Props) => {
         "Total Revenue": data?.financialData?.totalRevenue,
         "Gross Profit": data?.financialData?.grossProfits,
         "Description": data?.summaryProfile?.longBusinessSummary,
-        // "Previous Close": data?.summaryDetail?.previousClose,
-        // "Day Low": data?.summaryDetail?.dayLow,
-        // "Day High": data?.summaryDetail?.dayHigh,
-        // "PE Ratio": data?.indexTrend?.peRatio,
-        // "Debt To Equity": data?.financialData?.debtToEquity,
-        // "Quick Ratio": data?.financialData?.quickRatio,
-        // "Current Ratio": data?.financialData?.currentRatio,
-        // "Short Ratio": data?.defaultKeyStatistics?.shortRatio,
-        // "PEG Ratio": data?.indexTrend?.pegRatio,
-        // "Return On Assets": data?.financialData?.returnOnAssets,
-        // "Return on Equity": data?.financialData?.returnOnEquity,
-        // "Trailing EPS": data?.defaultKeyStatistics?.trailingEps,
-        // "Trailing PE": data?.summaryDetail?.trailingPE,
-        // "Forward PE": data?.summaryDetail?.forwardPE,
-        // "Total Cash": data?.financialData?.totalCash,
-        // "Revenue Growth": data?.financialData?.revenueGrowth,
-        // "Gross Margins": data?.financialData?.grossMargins,
-        // "Profit Margins": data?.financialData?.profitMargins,
-        // "Earnings Growth": data?.financialData?.earningsGrowth
+        
     }
+    
 
     return (
         <div className='h-full flex flex-col gap-5'>
@@ -42,7 +25,7 @@ const CompanyAdditional = ({ data }: Props) => {
             {
                 showDetails &&
                 <div className="border-gray-200 p-3 h-full rounded-xl bg-gray-100">
-                    <h2 className='text-2xl text-gray-600 font-bold text-center'>Additional Details</h2>
+                    <h2 className='text-2xl text-black mb-2 font-bold text-center'>Additional Details</h2>
                     {Object.entries(additionalDetailsData).map(([key, value]) => (
                         <div key={key} className="flex gap-2">
                             <span className="text-md font-bold text-black">{key}: </span>
