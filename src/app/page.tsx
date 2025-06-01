@@ -5,6 +5,7 @@ import { getTickerFromCompanyName, getCompanyData, getCompanyLogo } from "@/lib/
 import CompanyBasic from "@/components/CompanyBasic";
 import CompanyAdditional from "@/components/CompanyAdditional";
 import ComparisonChart from '@/components/ComparisonChart'
+import ChartPie from "@/components/ChartPie";
 
 
 export type _company_data = Awaited<ReturnType<typeof getCompanyData>>
@@ -48,7 +49,7 @@ const page = () => {
     }
     catch (err) {
       setError(true)
-      setErrorMessage(err as string)
+      setErrorMessage("Error requesting data from Server")
     }
     setLoading(false)
     console.log(company1Data)
@@ -109,6 +110,10 @@ const page = () => {
           <div className="grid grid-cols-2 px-4 pb-10 gap-x-10">
             <CompanyAdditional data={company1Data} />
             <CompanyAdditional data={company2Data} />
+          </div>
+          <div className="flex justify-between ">
+            <ChartPie data={company1Data}/>
+            <ChartPie data={company2Data}/>
           </div>
           <ComparisonChart company1Data={company1Data} company2Data={company2Data} />
         </div>
