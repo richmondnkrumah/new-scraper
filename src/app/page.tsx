@@ -17,6 +17,9 @@ const page = () => {
   const [company1Data, setCompany1Data] = useState<_company_data>(null)
   const [company2Data, setCompany2Data] = useState<_company_data>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>("")
+
 
 
   const getCompetitiveAnalysis = async (e: FormEvent<HTMLFormElement>) => {
@@ -24,21 +27,28 @@ const page = () => {
     setCompany1Data(null)
     setCompany2Data(null)
     setLoading(true)
-    const company1TickerSymbol = await getTickerFromCompanyName(company1)
-    const company2TickerSymbol = await getTickerFromCompanyName(company2)
-    console.log(company1TickerSymbol)
-    console.log(company2TickerSymbol)
-    if (company1TickerSymbol) {
-      const company1DataResult = await getCompanyData(company1TickerSymbol)
-      const company1LogoResult = await getCompanyLogo(company1TickerSymbol)
-      setCompany1Logo(company1LogoResult)
-      setCompany1Data(company1DataResult)
+    try {
+
+      const company1TickerSymbol = await getTickerFromCompanyName(company1)
+      const company2TickerSymbol = await getTickerFromCompanyName(company2)
+      console.log(company1TickerSymbol)
+      console.log(company2TickerSymbol)
+      if (company1TickerSymbol) {
+        const company1DataResult = await getCompanyData(company1TickerSymbol)
+        const company1LogoResult = await getCompanyLogo(company1TickerSymbol)
+        setCompany1Logo(company1LogoResult)
+        setCompany1Data(company1DataResult)
+      }
+      if (company2TickerSymbol) {
+        const company2DataResult = await getCompanyData(company2TickerSymbol)
+        const company2LogoResult = await getCompanyLogo(company2TickerSymbol)
+        setCompany2Logo(company2LogoResult)
+        setCompany2Data(company2DataResult)
+      }
     }
-    if (company2TickerSymbol) {
-      const company2DataResult = await getCompanyData(company2TickerSymbol)
-      const company2LogoResult = await getCompanyLogo(company2TickerSymbol)
-      setCompany2Logo(company2LogoResult)
-      setCompany2Data(company2DataResult)
+    catch (err) {
+      setError(true)
+      setErrorMessage(err as string)
     }
     setLoading(false)
     console.log(company1Data)
@@ -83,13 +93,20 @@ const page = () => {
 
       }
       {
+        error && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center">
+          <div className="loader"></div>
+          <p className="text-xl font-semibold text-gray-800">Additinoal Details: {errorMessage}</p>
+        </div>
+
+      }
+      {
         (company1Data && company2Data) &&
         <div className="">
           <div className="grid grid-cols-2 p-4 gap-x-10 ">
             <CompanyBasic data={company1Data} logo={company1Logo} />
             <CompanyBasic data={company2Data} logo={company2Logo} />
           </div>
-          <div className="grid grid-cols-2 p-6 gap-x-10">
+          <div className="grid grid-cols-2 px-4 pb-10 gap-x-10">
             <CompanyAdditional data={company1Data} />
             <CompanyAdditional data={company2Data} />
           </div>
