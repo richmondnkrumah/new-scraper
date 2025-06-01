@@ -92,12 +92,66 @@ export const ComparisonChart = ({
         ];
 
     // normalize two values to percentage relative to their max
+    //first version
+    // function normalizePair(a: number, b: number): [number, number] {
+    //     const max = Math.max(a, b);
+    //     if (max === 0) return [0, 0];
+    //     // Round to integer percent
+    //     return [Math.round((a / max) * 100), Math.round((b / max) * 100)];
+    // }
+    // // second version
+    // function normalizePair(a: number, b: number): [number, number] {
+    //     const max = Math.max(a, b);
+    //     const min = Math.min(a, b)
+    //     let res1 = 0;
+    //     let res2 = 0;
+
+    //     if (max === 0) return [res1, res2];
+
+    //     if (min < 0 && max > 0) {
+    //         // check for one negative and one positive values
+    //         res1 = 1
+    //         res2 = Math.round((max / max) * 100)
+    //     } else if (min < 0 && max < 0) {
+    //         // check for both negative and calculate the absolute values and reverse them
+    //         res1 = Math.abs(Math.round((max / min) * 100))
+    //         res2 = Math.abs(Math.round((min / min) * 100))
+    //     } else {
+    //         // they are both positive so no need
+    //         res1 = Math.round((a / max) * 100)
+    //         res2 = Math.round((b / max) * 100)
+    //     }
+    //     return [min === a ? res1 : res2, max === a ? res1 : res2];
+    // }
+    //third version
     function normalizePair(a: number, b: number): [number, number] {
+        // If values have different signs
+        if ((a >= 0 && b < 0) || (a < 0 && b >= 0)) {
+            return [
+                a >= 0 ? 100 : 1,
+                b >= 0 ? 100 : 1
+            ];
+        }
+
+        // If both values are negative
+        if (a < 0 && b < 0) {
+            const max = Math.max(a, b); 
+            return [
+                Math.round((a / max) * 100),
+                Math.round((b / max) * 100)
+            ];
+        }
+
+        // If both values are positive or zero
         const max = Math.max(a, b);
         if (max === 0) return [0, 0];
-        // Round to integer percent
-        return [Math.round((a / max) * 100), Math.round((b / max) * 100)];
+
+        return [
+            Math.round((a / max) * 100),
+            Math.round((b / max) * 100)
+        ];
     }
+
 
     // format numbers compactly (e.g. 2.5B, 1.2M, or decimals as-is)
     function formatValue(v: number): string {
@@ -153,8 +207,8 @@ export const ComparisonChart = ({
                 : `Both companies are evenly matched`;
 
     return (
-        <div className="space-y-6">
-            {/* Legend */}
+        <div className="space-y-6 mb-10">
+            <h1 className="font-bold mb-6 text-center text-4xl">{company1Name} vs {company2Name}</h1>
 
             {/* Comparison Table */}
             <div className="space-y-8">
