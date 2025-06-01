@@ -27,7 +27,7 @@ const CompanyBasic = ({ data,logo }: Props) => {
         <div className="border-gray-200 h-full p-3 rounded-xl bg-gray-100">
             <div className='flex items-center justify-between'>
                 <h2 className="text-xl font-bold text-blue-800">{data?.price?.symbol}</h2>
-                <Image src={logo} width={50} height={50} alt="Company Logo"/>
+                <Image src={logo} width={60} height={60} alt="Company Logo"/>
             </div>
             {Object.entries(summarizedData).map(([key, value]) => (
                 <div key={key} className="flex gap-2">
