@@ -133,6 +133,7 @@ const page = () => {
       }
       setCompany1Data(data1);
       setCompany1Logo(logo1);
+      console.log("Company 1 Data:", data1);
     }
     doAll()
 
@@ -160,6 +161,7 @@ const page = () => {
       }
       setCompany2Data(data2);
       setCompany2Logo(logo2);
+      console.log("Company 2 Data:", data2);
     }
     doAll()
 
@@ -229,8 +231,11 @@ const page = () => {
             <TickerSelector
               results={results1}
               onSelect={(selected) => {
-                SetTicker1(selected);
-                setResults1([]);
+                console.log("Selected Ticker 1:", selected);
+                SetTicker1(prev => {
+                  if (prev === selected) return ""; // trigger change
+                  return selected;
+                }); setResults1([]);
               }}
             />
           )}
@@ -238,7 +243,11 @@ const page = () => {
             <TickerSelector
               results={results2}
               onSelect={(selected) => {
-                SetTicker2(selected);
+                console.log("Selected Ticker 2:", selected);
+                SetTicker2(prev => {
+                  if (prev === selected) return ""; // trigger change
+                  return selected;
+                });
                 setResults2([]);
               }}
             />
