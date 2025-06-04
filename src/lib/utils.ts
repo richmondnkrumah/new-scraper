@@ -209,7 +209,7 @@ export async function getTickerOptions(query: string): Promise<TickerOption[]> {
   try {
     const result = await yahooFinance.search(query, {}, { validateResult: false });
     const filtered = (result.quotes || [])
-      .map(item => ({
+      .map((item: { symbol: any; shortname: any; longname: any; exchange: any; quoteType: any; }) => ({
         symbol: item.symbol,
         name: item.shortname || item.longname || item.symbol,
         exchange: item.exchange,
