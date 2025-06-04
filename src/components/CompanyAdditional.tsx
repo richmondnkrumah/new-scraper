@@ -8,19 +8,21 @@ type Props = {
 const CompanyAdditional = ({ data }: Props) => {
     const [showDetails, setShowDetails] = useState<boolean>(false)
     const additionalDetailsData = {
-        "Full TIme Employees": data?.summaryProfile?.fullTimeEmployees,
         "Market Cap": data?.summaryDetail?.marketCap,
         "Volume": data?.summaryDetail?.volume,
         "Average Volume": data?.summaryDetail?.averageVolume,
         "Total Revenue": data?.financialData?.totalRevenue,
+        "revenueGrowth (%)": data?.financialData?.revenueGrowth,
+        "earningsGrowth (%)": data?.financialData?.earningsGrowth,
         "Gross Profit": data?.financialData?.grossProfits,
         "Description": data?.summaryProfile?.longBusinessSummary,
         
     }
+    console.log(additionalDetailsData,"Additional")
     
 
     return (
-        <div className='h-full flex flex-col gap-5'>
+        <div className=' flex flex-col gap-5'>
             <span className="cursor-pointer underline text-blue-500" onClick={() => setShowDetails(prev => !prev)}>click to see more</span>
             {
                 showDetails &&

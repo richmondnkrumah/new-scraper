@@ -26,8 +26,6 @@ export const ComparisonChart = ({
         "priceToSales": company1Data?.summaryDetail?.priceToSalesTrailing12Months,
         "priceToBook": company1Data?.defaultKeyStatistics?.priceToBook,
         "debtToEquity": company1Data?.financialData?.debtToEquity,
-        "revenueGrowth": company1Data?.financialData?.revenueGrowth,
-        "earningsGrowth": company1Data?.financialData?.earningsGrowth,
         "beta": company1Data?.summaryDetail?.beta,
         "heldPercentInstitutions": company1Data?.majorHoldersBreakdown?.institutionsPercentHeld,
         "insidersPercentHeld": company1Data?.majorHoldersBreakdown?.insidersPercentHeld,
@@ -48,8 +46,6 @@ export const ComparisonChart = ({
         "priceToSales": company2Data?.summaryDetail?.priceToSalesTrailing12Months,
         "priceToBook": company2Data?.defaultKeyStatistics?.priceToBook,
         "debtToEquity": company2Data?.financialData?.debtToEquity,
-        "revenueGrowth": company2Data?.financialData?.revenueGrowth,
-        "earningsGrowth": company2Data?.financialData?.earningsGrowth,
         "beta": company2Data?.summaryDetail?.beta,
         "heldPercentInstitutions": company2Data?.majorHoldersBreakdown?.institutionsPercentHeld,
         "insidersPercentHeld": company2Data?.majorHoldersBreakdown?.insidersPercentHeld,
@@ -57,10 +53,10 @@ export const ComparisonChart = ({
         "employees": company2Data?.summaryProfile?.fullTimeEmployees,
         "averageVolume": company2Data?.summaryDetail?.averageVolume,
         "volume": company2Data?.summaryDetail?.volume,
-        
-
-
     }
+
+    console.log(company1Name,company1Metrics)
+    console.log(company2Name,company2Metrics)
 
     const categories: {
         heading: string;
@@ -93,8 +89,6 @@ export const ComparisonChart = ({
                     { key: 'employees', label: 'Employees' },
                     { key: 'volume', label: 'Volume' },
                     { key: 'averageVolume', label: 'Average Volume' },
-                    { key: 'revenueGrowth', label: 'Revenue Growth (%)' },
-                    { key: 'earningsGrowth', label: 'Earnings Growth (%)' },
                 ],
             },
             {
