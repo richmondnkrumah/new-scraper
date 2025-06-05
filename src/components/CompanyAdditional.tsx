@@ -22,7 +22,7 @@ const CompanyAdditional = ({ data }: Props) => {
     
 
     return (
-        <div className=' flex flex-col gap-5'>
+        <div className=' h-full flex flex-col gap-5'>
             <span className="cursor-pointer underline text-blue-500" onClick={() => setShowDetails(prev => !prev)}>click to see more</span>
             {
                 showDetails &&
