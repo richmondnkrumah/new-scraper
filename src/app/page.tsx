@@ -8,7 +8,8 @@ import ComparisonChart from '@/components/ComparisonChart'
 import ChartPie from "@/components/ChartPie";
 import TickerSelector from "@/components/TickerSelector";
 import type { TickerOption } from "@/lib/utils";
-import { getTickerOptions } from "@/lib/utils"; // Server action
+import { getTickerOptions } from "@/lib/utils"; 
+import NoTickerFound from "@/components/NoTickerFound";
 
 
 export type _company_data = Awaited<ReturnType<typeof getCompanyData>>
@@ -29,6 +30,8 @@ const page = () => {
   const [results2, setResults2] = useState<TickerOption[]>([]);
   const [ticker1, SetTicker1] = useState<string>("")
   const [ticker2, SetTicker2] = useState<string>("")
+  const [noTicker1, setNoTicker1] = useState(false);
+  const [noTicker2, setNoTicker2] = useState(false);
 
 
   const getTickers = async (e: FormEvent<HTMLFormElement>) => {
@@ -40,6 +43,8 @@ const page = () => {
     setCompany2Data(null);
     const res1 = await getTickerOptions(company1);
     const res2 = await getTickerOptions(company2);
+    setNoTicker1(res1.length === 0);
+    setNoTicker2(res2.length === 0);
     console.log(company1, company2)
     console.log(res1)
     console.log(res2)
@@ -256,26 +261,32 @@ const page = () => {
       )}
 
       {/* Main comparison cards side-by-side */}
-      {(company1Data || company2Data) && (
+      {(company1Data || company2Data || noTicker1 || noTicker2  ) && (
         <div className="flex gap-10 px-4 py-6">
-          {company1Data && (
-            <div className="w-1/2 flex flex-col justify-between bg-white rounded-xl p-4 shadow">
-              <div>
+          <div className="w-1/2 flex flex-col justify-between bg-white rounded-xl p-4 shadow">
+            {noTicker1 ? (
+              <NoTickerFound name={company1} />
+            ) : company1Data ? (
+              <>
                 <CompanyBasic data={company1Data} logo={company1Logo} />
                 <CompanyAdditional data={company1Data} />
-              </div>
-              <ChartPie data={company1Data} />
-            </div>
-          )}
-          {company2Data && (
-            <div className="w-1/2 flex flex-col gap-10 justify-between bg-white rounded-xl p-4 shadow">
-              <div>
+                <ChartPie data={company1Data} />
+              </>
+            ) : null}
+          </div>
+
+          <div className="w-1/2 flex flex-col justify-between bg-white rounded-xl p-4 shadow">
+            {noTicker2 ? (
+              <NoTickerFound name={company2} />
+            ) : company2Data ? (
+              <>
                 <CompanyBasic data={company2Data} logo={company2Logo} />
                 <CompanyAdditional data={company2Data} />
-              </div>
-              <ChartPie data={company2Data} />
-            </div>
-          )}
+                <ChartPie data={company2Data} />
+              </>
+            ) : null}
+          </div>
+
         </div>
       )}
 
