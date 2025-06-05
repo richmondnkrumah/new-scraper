@@ -121,11 +121,11 @@ export async function getCompanyDataFromGemini(companyName: string) {
     const cleanedText = rawText.replace(/^```json\s*|```\s*$/g, '').trim();
     const json = JSON.parse(cleanedText);
 
-    if (!json || typeof json.companyA !== 'object' || json.companyA === null) {
-      console.error('Parsed JSON does not contain a valid companyA object:', cleanedText);
+    if (!json || typeof json !== 'object' || json === null) {
+      console.error('Parsed JSON does not contain a valid object:', cleanedText);
       throw new Error('Gemini returned JSON in an unexpected structure (missing companyA).');
     }
-    return json.companyA;
+    return json;
 
   } catch (err) {
     console.error('Failed to parse Gemini response text as JSON:', err instanceof Error ? err.message : String(err));
@@ -133,20 +133,25 @@ export async function getCompanyDataFromGemini(companyName: string) {
     throw new Error('Gemini returned invalid JSON format after parsing the text content.');
   }
 }
-
 function generateGeminiPrompt(companyName: string): string {
   return `
-Return ONLY the following data in valid JSON format for the company "${companyName}".
-Do not include any explanatory text, markdown formatting, or anything else before or after the JSON object.
-The entire response should be a single JSON object.
-the values should be of the full latest year 2024 - 2025.
+Analyze the company "${companyName}". Your entire response MUST be a single, valid JSON object.
+Do not include any text, explanations, markdown formatting, or code fences before or after the JSON.
 
-The JSON object must have a single top-level key "companyA".
+**Instructions & Rules:**
+1.  **Data Timeframe:** Use the most current data available. Financial metrics (like revenue, P/E) should be for the Trailing Twelve Months (TTM) unless specified otherwise.
+2.  **Ticker Symbol:** The 'symbol' property must be the company's official stock ticker.
+3.  **Data Types:**
+    - For any **unknown or N/A string field** (e.g., website, industry), return an empty string \`""\`.
+    - For any **unknown or N/A numerical field** (e.g., marketCap, trailingPE), return \`null\`. Do not use \`0\` or \`""\`.
+4.  **Company Not Found:** If you cannot confidently identify the company, return the following specific JSON error object and nothing else: \`{ "error": "Company not found", "companyName": "${companyName}" }\`
+
+**Required JSON Structure:**
 
 {
-  "companyA": {
-  "price": {
-    "longName": ""
+"price":{
+  "longName": "",
+  "symbol": "",
   },
   "summaryProfile": {
     "industry": "",
@@ -154,45 +159,37 @@ The JSON object must have a single top-level key "companyA".
     "country": "",
     "sector": "",
     "longBusinessSummary": "",
-    "fullTimeEmployees": ""
+    "fullTimeEmployees": null
   },
   "summaryDetail": {
-    "marketCap": "",
-    "volume": "",
-    "averageVolume": "",
-    "trailingPE": "",
-    "forwardPE": "",
-    "priceToSalesTrailing12Months": "",
-    "beta": ""
+    "marketCap": null,
+    "volume": null,
+    "averageVolume": null,
+    "trailingPE": null,
+    "forwardPE": null,
+    "priceToSalesTrailing12Months": null,
+    "beta": null
   },
   "financialData": {
-    "totalRevenue": "",
-    "revenueGrowth": "",
-    "earningsGrowth": "",
-    "grossProfits": "",
-    "grossMargins": "",
-    "profitMargins": "",
-    "freeCashflow": "",
-    "debtToEquity": ""
+    "totalRevenue": null,
+    "revenueGrowth": null,
+    "earningsGrowth": null,
+    "grossProfits": null,
+    "grossMargins": null,
+    "profitMargins": null,
+    "freeCashflow": null,
+    "debtToEquity": null
   },
   "defaultKeyStatistics": {
-    "priceToBook": ""
+    "priceToBook": null
   },
   "majorHoldersBreakdown": {
-    "institutionsPercentHeld": "",
-    "insidersPercentHeld": ""
-  },
-  "custom": {
-    "logo": "",
-    "keyStrengths": ["", ""],
-    "products": ["", ""],
-    "competitors": ["", ""]
+    "institutionsPercentHeld": null,
+    "insidersPercentHeld": null
   }
 }
+`;
 }
-If any field is unknown, return an empty string ("") for string fields, or an empty array ([]) for array fields. Do not use null or undefined.
-;
-}`}
 
 
 export type TickerOption = {
