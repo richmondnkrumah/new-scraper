@@ -1,13 +1,13 @@
 'use client'
 import { useEffect, useState, type FormEvent } from "react";
-import {  getCompanyData, getCompanyLogo, getCompanyDataFromGemini } from "@/lib/utils";
+import { getCompanyData, getCompanyLogo, getCompanyDataFromGemini } from "@/lib/utils";
 import CompanyBasic from "@/components/CompanyBasic";
 import CompanyAdditional from "@/components/CompanyAdditional";
 import ComparisonChart from '@/components/ComparisonChart'
 import ChartPie from "@/components/ChartPie";
 import TickerSelector from "@/components/TickerSelector";
 import type { TickerOption } from "@/lib/utils";
-import { getTickerOptions } from "@/lib/utils"; 
+import { getTickerOptions } from "@/lib/utils";
 import NoTickerFound from "@/components/NoTickerFound";
 
 
@@ -20,9 +20,11 @@ const page = () => {
   const [company2Logo, setCompany2Logo] = useState<string>("");
   const [company1Data, setCompany1Data] = useState<_company_data>(null)
   const [company2Data, setCompany2Data] = useState<_company_data>(null)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [globalLoading, setGlobalLoading] = useState<boolean>(false)
+  const [error1, setError1] = useState<boolean>(false)
+  const [error2, setError2] = useState<boolean>(false)
+  const [loading1, setLoading1] = useState<boolean>(false)
+  const [loading2, setLoading2] = useState<boolean>(false)
   const [fallbackUsed1, setFallbackUsed1] = useState(false);
   const [fallbackUsed2, setFallbackUsed2] = useState(false);
   const [results1, setResults1] = useState<TickerOption[]>([]);
@@ -31,52 +33,73 @@ const page = () => {
   const [ticker2, SetTicker2] = useState<string>("")
   const [noTicker1, setNoTicker1] = useState(false);
   const [noTicker2, setNoTicker2] = useState(false);
-
+  const [noTickerName1, setNoTickerName1] = useState("");
+  const [noTickerName2, setNoTickerName2] = useState("");
 
   const getTickers = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setResults1([]);
     setResults2([]);
-    setLoading(true);
+    setGlobalLoading(true);
     setCompany1Data(null);
     setCompany2Data(null);
     const res1 = await getTickerOptions(company1);
     const res2 = await getTickerOptions(company2);
-    setNoTicker1(res1.length === 0);
-    setNoTicker2(res2.length === 0);
+    if (res1.length === 0) {
+      setNoTicker1(true);
+      setNoTickerName1(company1); // freeze current input
+    } else {
+      setNoTicker1(false);
+      setNoTickerName1("");
+    }
+
+    if (res2.length === 0) {
+      setNoTicker2(true);
+      setNoTickerName2(company2);
+    } else {
+      setNoTicker2(false);
+      setNoTickerName2("");
+    }
     console.log(company1, company2)
     console.log(res1)
     console.log(res2)
     setResults1(res1);
     setResults2(res2);
-    setLoading(false);
+    setGlobalLoading(false);
   }
 
 
   useEffect(() => {
     // Fetch company 1
     if (!ticker1) return;
-    console.log("start fetching here", ticker1)
+    setLoading1(true);
+    setError1(false);
     setFallbackUsed1(false);
     setCompany1Data(null);
     setCompany1Logo("");
+    console.log("start fetching here", ticker1)
 
     const doAll = async () => {
-
-      let data1 = null, logo1 = "";
-      if (ticker1) {
-        data1 = await getCompanyData(ticker1);
-        logo1 = await getCompanyLogo(company1);
-
+      try {
+        let data1 = null, logo1 = "";
+        if (ticker1) {
+          data1 = await getCompanyData(company1);
+          logo1 = await getCompanyLogo(company1);
+        }
+        if (!data1 || Object.keys(data1).length < 3) {
+          setFallbackUsed1(true);
+          data1 = await getCompanyDataFromGemini(company1);
+          console.log("Using fallback for company 1:", data1);
+        }
+        setCompany1Data(data1);
+        setCompany1Logo(logo1);
+        console.log("Company 1 Data:", data1);
       }
-      if (!data1) {
-        data1 = await getCompanyDataFromGemini(company1);
-        console.log("Using fallback for company 1:", data1);
-        setFallbackUsed1(true);
+      catch (error) {
+        console.error("Error fetching company 1 data:", error);
+        setError1(true);
       }
-      setCompany1Data(data1);
-      setCompany1Logo(logo1);
-      console.log("Company 1 Data:", data1);
+      setLoading1(false);
     }
     doAll()
 
@@ -85,26 +108,35 @@ const page = () => {
   useEffect(() => {
     // Fetch company 1
     if (!ticker2) return;
-    console.log("start fetching here", ticker2)
+    setLoading2(true);
+    setError2(false);
     setFallbackUsed2(false);
     setCompany2Data(null);
     setCompany2Logo("");
+    console.log("start fetching here", ticker2)
 
     const doAll = async () => {
+      try {
 
-      let data2 = null, logo2 = "";
-      if (ticker2) {
-        data2 = await getCompanyData(ticker2);
-        logo2 = await getCompanyLogo(company2);
+        let data2 = null, logo2 = "";
+        if (ticker2) {
+          data2 = await getCompanyData(company2);
+          logo2 = await getCompanyLogo(company2);
+        }
+        if (!data2 || Object.keys(data2).length < 3) {
+          setFallbackUsed2(true);
+          data2 = await getCompanyDataFromGemini(company2);
+          console.log("Using fallback for company 1:", data2);
+        }
+        setCompany2Data(data2);
+        setCompany2Logo(logo2);
+        console.log("Company 2 Data:", data2);
       }
-      if (!data2) {
-        data2 = await getCompanyDataFromGemini(company2);
-        console.log("Using fallback for company 1:", data2);
-        setFallbackUsed2(true);
+      catch (error) {
+        console.error("Error fetching company 2 data:", error);
+        setError2(true);
       }
-      setCompany2Data(data2);
-      setCompany2Logo(logo2);
-      console.log("Company 2 Data:", data2);
+      setLoading2(false);
     }
     doAll()
 
@@ -141,92 +173,119 @@ const page = () => {
             />
           </div>
         </form>
-
       </div>
       {
-        (fallbackUsed1 || fallbackUsed2) &&
-        <div className="p-4 mt-2 text-sm text-yellow-700 bg-yellow-100 rounded-lg">
-          <p className="font-semibold mb-1">Note:</p>
-          <ul className="list-disc list-inside">
-            {fallbackUsed1 && <li>Data for <strong>{company1}</strong> was incomplete or unavailable on Yahoo Finance. Fetched from Gemini AI instead.</li>}
-            {fallbackUsed2 && <li>Data for <strong>{company2}</strong> was incomplete or unavailable on Yahoo Finance. Fetched from Gemini AI instead.</li>}
-          </ul>
-        </div>
-      }
-
-      {
-        loading && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center">
+        globalLoading ? <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center">
           <div className="loader"></div>
           <p className="text-xl font-semibold text-gray-800">Getting Data</p>
         </div>
+          :
+          (
+            <div className="grid grid-cols-2 gap-x-10 px-4 h-full">
+              {
+                fallbackUsed1 &&
+                <div className=" flex flex-col justify-between bg-yellow-200 p-4">
+                  {<li>Data for <strong>{company1}</strong> was incomplete on Yahoo Finance. Fetched from Gemini AI instead.</li>}
+                </div>
+              }
+              {
+                fallbackUsed2 &&
+                <div className=" flex flex-col justify-between bg-yellow-200 p-4">
+                  {<li>Data for <strong>{company2}</strong> was incomplete on Yahoo Finance. Fetched from Gemini AI instead.</li>}
+                </div>
+              }
+              {
+                loading1 && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center">
+                  <div className="loader"></div>
+                  <p className="text-xl font-semibold text-gray-800">Getting {ticker1} Data</p>
+                </div>
+              }
+              {results1.length > 0 && (
+                <TickerSelector
+                  results={results1}
+                  onSelect={(selected) => {
+                    console.log("Selected Ticker 1:", selected);
+                    SetTicker1(prev => {
+                      if (prev === selected) return "";
+                      return selected;
+                    }); setResults1([]);
+                  }}
+                />
+              )}
+              {/* Main comparison cards side-by-side */}
+              {(company1Data || noTicker1 || error1) && (
+                <div className="flex gap-10 px-4 py-6 ">
+                  <div className="flex w-full flex-col justify-between bg-white rounded-xl p-4 shadow">
+                    {
+                      error1 && (
+                        <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center text-red-600">
+                          <span className="text-2xl">⚠️</span>
+                          <p className="text-xl font-semibold">Failed to load {ticker1} data</p>
+                        </div>
+                      )
+                    }
+                    {noTicker1 ? (
+                      <NoTickerFound name={noTickerName1} />
+                    ) : company1Data ? (
+                      <>
+                        <CompanyBasic data={company1Data} logo={company1Logo} />
+                        <CompanyAdditional data={company1Data} />
+                        <ChartPie data={company1Data} />
+                      </>
+                    ) : null}
+                  </div>
 
-      }
-      {error && (
-        <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center text-red-600">
-          <span className="text-2xl">⚠️</span>
-          <p className="text-xl font-semibold">Failed to load comparison data</p>
-          <p>{errorMessage}</p>
-        </div>
-      )}
-      {(results1.length > 0 || results2.length > 0) && (
-        <div className="grid grid-cols-2 gap-x-10 px-4">
-          {results1.length > 0 && (
-            <TickerSelector
-              results={results1}
-              onSelect={(selected) => {
-                console.log("Selected Ticker 1:", selected);
-                SetTicker1(prev => {
-                  if (prev === selected) return ""; 
-                  return selected;
-                }); setResults1([]);
-              }}
-            />
+                </div>
+              )}
+              {
+                loading2 && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center">
+                  <div className="loader"></div>
+                  <p className="text-xl font-semibold text-gray-800">Getting {ticker2} Data</p>
+                </div>
+              }
+              {results2.length > 0 && (
+                <TickerSelector
+                  results={results2}
+                  onSelect={(selected) => {
+                    console.log("Selected Ticker 2:", selected);
+                    SetTicker2(prev => {
+                      if (prev === selected) return "";
+                      return selected;
+                    });
+                    setResults2([]);
+                  }}
+                />
+              )}
+              {/* Main comparison cards side-by-side */}
+              {(company2Data || noTicker2 || error2) && (
+                <div className="flex gap-10 px-4 py-6">
+
+                  <div className="flex w-full flex-col justify-between bg-white rounded-xl p-4 shadow">
+                    {
+                      error2 && (
+                        <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center text-red-600">
+                          <span className="text-2xl">⚠️</span>
+                          <p className="text-xl font-semibold">Failed to load {ticker1} data</p>
+                        </div>
+                      )
+                    }
+                    {noTicker2 ? (
+                      <NoTickerFound name={noTickerName2} />
+                    ) : company2Data ? (
+                      <>
+                        <CompanyBasic data={company2Data} logo={company2Logo} />
+                        <CompanyAdditional data={company2Data} />
+                        <ChartPie data={company2Data} />
+                      </>
+                    ) : null}
+                  </div>
+
+                </div>
+              )}
+            </div>
           )}
-          {results2.length > 0 && (
-            <TickerSelector
-              results={results2}
-              onSelect={(selected) => {
-                console.log("Selected Ticker 2:", selected);
-                SetTicker2(prev => {
-                  if (prev === selected) return ""; 
-                  return selected;
-                });
-                setResults2([]);
-              }}
-            />
-          )}
-        </div>
-      )}
 
-      {/* Main comparison cards side-by-side */}
-      {(company1Data || company2Data || noTicker1 || noTicker2  ) && (
-        <div className="flex gap-10 px-4 py-6">
-          <div className="w-1/2 flex flex-col justify-between bg-white rounded-xl p-4 shadow">
-            {noTicker1 ? (
-              <NoTickerFound name={company1} />
-            ) : company1Data ? (
-              <>
-                <CompanyBasic data={company1Data} logo={company1Logo} />
-                <CompanyAdditional data={company1Data} />
-                <ChartPie data={company1Data} />
-              </>
-            ) : null}
-          </div>
 
-          <div className="w-1/2 flex flex-col justify-between bg-white rounded-xl p-4 shadow">
-            {noTicker2 ? (
-              <NoTickerFound name={company2} />
-            ) : company2Data ? (
-              <>
-                <CompanyBasic data={company2Data} logo={company2Logo} />
-                <CompanyAdditional data={company2Data} />
-                <ChartPie data={company2Data} />
-              </>
-            ) : null}
-          </div>
-
-        </div>
-      )}
 
       {/* Final Comparison Chart below both */}
       {company1Data && company2Data && (
