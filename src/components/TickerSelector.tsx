@@ -5,7 +5,7 @@ import { getTickerOptions } from "@/lib/utils"; // Server action
 import type { TickerOption } from "@/lib/utils";
 
 type Props = {
-    onSelect: (ticker: string) => void;
+    onSelect: (ticker: string,symbol: string) => void;
     results: any[]
 };
 
@@ -21,7 +21,7 @@ export default function TickerSelector({ onSelect, results }: Props) {
                     >
                         <button
                             type="button"
-                            onClick={() => onSelect(item.symbol)}
+                            onClick={() => onSelect(item.symbol, item.name)}
                             className="w-full text-left"
                         >
 
