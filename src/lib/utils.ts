@@ -11,9 +11,8 @@ interface GeminiResponse {
     };
     finishReason: string,
     safetyRatings: any[]
-    // Include other potential fields from Gemini like finishReason, safetyRatings etc. if needed
   }>;
-  promptFeedback?: any; // Define further if you need to inspect this
+  promptFeedback?: any;
 }
 
 export async function getTickerFromCompanyName(name: string) {
@@ -118,7 +117,7 @@ export async function getCompanyDataFromGemini(companyName: string) {
   }
 
   try {
-    // It's good practice to clean the text if Gemini sometimes adds markdown ```json ... ```
+
     const cleanedText = rawText.replace(/^```json\s*|```\s*$/g, '').trim();
     const json = JSON.parse(cleanedText);
 
@@ -126,7 +125,6 @@ export async function getCompanyDataFromGemini(companyName: string) {
       console.error('Parsed JSON does not contain a valid companyA object:', cleanedText);
       throw new Error('Gemini returned JSON in an unexpected structure (missing companyA).');
     }
-    // You could add further validation here using a schema library like Zod if needed.
     return json.companyA;
 
   } catch (err) {

@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState, type FormEvent } from "react";
-import CompanyCard from "@/components/CompanyCard";
-import { getTickerFromCompanyName, getCompanyData, getCompanyLogo, getCompanyDataFromGemini } from "@/lib/utils";
+import {  getCompanyData, getCompanyLogo, getCompanyDataFromGemini } from "@/lib/utils";
 import CompanyBasic from "@/components/CompanyBasic";
 import CompanyAdditional from "@/components/CompanyAdditional";
 import ComparisonChart from '@/components/ComparisonChart'
@@ -54,67 +53,6 @@ const page = () => {
   }
 
 
-  const getCompetitiveAnalysis = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setCompany1Data(null);
-    setCompany2Data(null);
-    setFallbackUsed1(false);
-    setFallbackUsed2(false);
-    setLoading(true);
-    setError(false);
-    setErrorMessage("");
-
-
-    try {
-      // const [ticker1, ticker2] = await Promise.all([
-      //   getTickerFromCompanyName(company1),
-      //   getTickerFromCompanyName(company2),
-      // ]);
-
-      // Fetch company 1
-      let data1 = null, logo1 = "";
-      if (ticker1) {
-        data1 = await getCompanyData(ticker1);
-        logo1 = await getCompanyLogo(company1);
-
-      }
-      if (!data1) {
-        data1 = await getCompanyDataFromGemini(company1);
-        console.log("Using fallback for company 1:", data1);
-        setFallbackUsed1(true);
-      }
-
-      // Fetch company 2
-      let data2 = null, logo2 = "";
-      if (ticker2) {
-        data2 = await getCompanyData(ticker2);
-        logo2 = await getCompanyLogo(company2);
-      }
-      if (!data2) {
-        data2 = await getCompanyDataFromGemini(company2);
-        setFallbackUsed2(true);
-      }
-
-      if (!data1 && !data2) {
-        throw new Error("Could not retrieve data for both companies.");
-      }
-
-      setCompany1Data(data1);
-      setCompany2Data(data2);
-      setCompany1Logo(logo1);
-      setCompany2Logo(logo2);
-      console.log("Company 1 Data:", data1);
-      console.log("Company 2 Data:", data2);
-
-    } catch (err) {
-      setError(true);
-      setErrorMessage(err instanceof Error ? err.message : "An error occurred during data fetching.");
-    } finally {
-      setLoading(false);
-
-    }
-
-  };
   useEffect(() => {
     // Fetch company 1
     if (!ticker1) return;
@@ -238,7 +176,7 @@ const page = () => {
               onSelect={(selected) => {
                 console.log("Selected Ticker 1:", selected);
                 SetTicker1(prev => {
-                  if (prev === selected) return ""; // trigger change
+                  if (prev === selected) return ""; 
                   return selected;
                 }); setResults1([]);
               }}
@@ -250,7 +188,7 @@ const page = () => {
               onSelect={(selected) => {
                 console.log("Selected Ticker 2:", selected);
                 SetTicker2(prev => {
-                  if (prev === selected) return ""; // trigger change
+                  if (prev === selected) return ""; 
                   return selected;
                 });
                 setResults2([]);
