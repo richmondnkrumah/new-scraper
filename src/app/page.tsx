@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, type FormEvent } from "react";
-import { getCompanyData, getCompanyLogo, getCompanyDataFromGemini } from "@/lib/utils";
+import { getCompanyData, getCompanyLogo, getCompanyDataFromGemini, normalizeCompanyCurrency } from "@/lib/utils";
 import CompanyBasic from "@/components/CompanyBasic";
 import CompanyAdditional from "@/components/CompanyAdditional";
 import ComparisonChart from '@/components/ComparisonChart'
@@ -9,6 +9,7 @@ import TickerSelector from "@/components/TickerSelector";
 import type { TickerOption } from "@/lib/utils";
 import { getTickerOptions } from "@/lib/utils";
 import NoTickerFound from "@/components/NoTickerFound";
+import Image from "next/image";
 
 
 export type _company_data = Awaited<ReturnType<typeof getCompanyData>>
@@ -16,6 +17,8 @@ export type _company_data = Awaited<ReturnType<typeof getCompanyData>>
 const page = () => {
   const [company1, setCompany1] = useState<string>("");
   const [company2, setCompany2] = useState<string>("");
+  const [company1Symbol, setCompany1Symbol] = useState<string>("");
+  const [company2Symbol, setCompany2Symbol] = useState<string>("");
   const [company1Logo, setCompany1Logo] = useState<string>("");
   const [company2Logo, setCompany2Logo] = useState<string>("");
   const [company1Data, setCompany1Data] = useState<_company_data>(null)
@@ -83,13 +86,19 @@ const page = () => {
       try {
         let data1 = null, logo1 = "";
         if (ticker1) {
-          data1 = await getCompanyData(company1);
-          logo1 = await getCompanyLogo(company1);
+          data1 = await getCompanyData(ticker1);
+          console.log(company1Symbol, "Company 1 Symbol")
+          logo1 = await getCompanyLogo(company1Symbol);
+          console.log("Company 1 Logo:", logo1);
         }
-        if (!data1 || Object.keys(data1).length < 3) {
+        if (!data1 || Object.keys(data1?.summaryProfile!).length < 6) {
           setFallbackUsed1(true);
-          data1 = await getCompanyDataFromGemini(company1);
+          data1 = await getCompanyDataFromGemini(company1Symbol);
           console.log("Using fallback for company 1:", data1);
+        }
+        if (data1?.summaryDetail.currency && data1.summaryDetail.currency !== "USD") {
+          data1 = await normalizeCompanyCurrency(data1, data1.summaryDetail.currency, "USD");
+          console.log("Normalized company 1 data:", data1);
         }
         setCompany1Data(data1);
         setCompany1Logo(logo1);
@@ -120,13 +129,17 @@ const page = () => {
 
         let data2 = null, logo2 = "";
         if (ticker2) {
-          data2 = await getCompanyData(company2);
-          logo2 = await getCompanyLogo(company2);
+          data2 = await getCompanyData(ticker2);
+          console.log(company2Symbol, "Company 2 Symbol")
+          logo2 = await getCompanyLogo(company2Symbol);
         }
-        if (!data2 || Object.keys(data2).length < 3) {
+        if (!data2 || Object.keys(data2?.summaryProfile!).length < 6) {
           setFallbackUsed2(true);
-          data2 = await getCompanyDataFromGemini(company2);
+          data2 = await getCompanyDataFromGemini(company2Symbol);
           console.log("Using fallback for company 1:", data2);
+        }
+        if (data2?.summaryDetail.currency && data2.summaryDetail.currency !== "USD") {
+          data2 = await normalizeCompanyCurrency(data2, data2.summaryDetail.currency, "USD");
         }
         setCompany2Data(data2);
         setCompany2Logo(logo2);
@@ -141,8 +154,6 @@ const page = () => {
     doAll()
 
   }, [ticker2])
-
-
 
   return (
     <div className="max-w-7xl mx-auto p-4 flex flex-col min-h-[100dvh]">
@@ -203,8 +214,9 @@ const page = () => {
               {results1.length > 0 && (
                 <TickerSelector
                   results={results1}
-                  onSelect={(selected) => {
+                  onSelect={(selected, symbol) => {
                     console.log("Selected Ticker 1:", selected);
+                    setCompany1Symbol(symbol);
                     SetTicker1(prev => {
                       if (prev === selected) return "";
                       return selected;
@@ -246,8 +258,9 @@ const page = () => {
               {results2.length > 0 && (
                 <TickerSelector
                   results={results2}
-                  onSelect={(selected) => {
+                  onSelect={(selected, symbol) => {
                     console.log("Selected Ticker 2:", selected);
+                    setCompany2Symbol(symbol);
                     SetTicker2(prev => {
                       if (prev === selected) return "";
                       return selected;
