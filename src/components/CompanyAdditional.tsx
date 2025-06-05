@@ -7,6 +7,8 @@ type Props = {
 
 const CompanyAdditional = ({ data }: Props) => {
     const [showDetails, setShowDetails] = useState<boolean>(false)
+
+
     const additionalDetailsData = {
         "Market Cap": data?.summaryDetail?.marketCap,
         "Volume": data?.summaryDetail?.volume,
