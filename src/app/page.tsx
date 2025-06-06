@@ -278,7 +278,7 @@ const page = () => {
                       error2 && (
                         <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center text-red-600">
                           <span className="text-2xl">⚠️</span>
-                          <p className="text-xl font-semibold">Failed to load {ticker1} data</p>
+                          <p className="text-xl font-semibold">Failed to load {ticker2} data</p>
                         </div>
                       )
                     }

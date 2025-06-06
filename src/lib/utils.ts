@@ -238,10 +238,12 @@ const EXCHANGERATE_API_KEY = process.env.EXCHANGERATE_API_KEY!;
 const BASE_URL = `https://v6.exchangerate-api.com/v6/${EXCHANGERATE_API_KEY}`;
 
 export async function convertCurrency(amount: number, from: string, to: string): Promise<number> {
-  const res = await fetch(`${BASE_URL}/pair/${from}/${to}/${amount}`);
+  const res = await fetch(`https://api.frankfurter.dev/v1/latest?base=${from}&symbols=${to}`);
   const data = await res.json();
-  if (data.result === 'success') return data.conversion_result;
-  throw new Error('Currency conversion failed');
+  // const data = JSON.parse(convert)
+  const amounte = (data?.rates?.[to] * amount).toFixed(2);
+  console.log("Currency conversion response:", data,amounte);
+  return Number(amounte) || amount ;
 }
 
 export async function normalizeCompanyCurrency(companyData_: _company_data, from: string, to = "USD") {
