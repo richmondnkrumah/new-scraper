@@ -1,5 +1,6 @@
 import React from 'react';
 import type { _company_data } from '@/app/page'
+import { formatValue } from '@/lib/helper';
 
 type CompanyMetrics = Record<string, number | undefined>;
 
@@ -65,12 +66,12 @@ export const ComparisonChart = ({
             {
                 heading: 'Financial Metrics',
                 metrics: [
-                    { key: 'marketCap', label: 'Market Cap' },
-                    { key: 'totalRevenue', label: 'Total Revenue' },
-                    { key: 'grossMargins', label: 'Gross Margin' },
-                    { key: 'grossProfit', label: 'Gross Profit' },
-                    { key: 'profitMargins', label: 'Profit Margin' },
-                    { key: 'freeCashflow', label: 'Free Cash Flow' },
+                    { key: 'marketCap', label: 'Market Cap (USD)' },
+                    { key: 'totalRevenue', label: 'Total Revenue (USD)' },
+                    { key: 'grossMargins', label: 'Gross Margin (%)' },
+                    { key: 'grossProfit', label: 'Gross Profit (USD)' },
+                    { key: 'profitMargins', label: 'Profit Margin (%)' },
+                    { key: 'freeCashflow', label: 'Free Cash Flow (USD)' },
                 ],
             },
             {
@@ -144,7 +145,7 @@ export const ComparisonChart = ({
 
         // If both values are negative
         if (a < 0 && b < 0) {
-            const max = Math.max(a, b); 
+            const max = Math.max(a, b);
             return [
                 Math.round((a / max) * 100),
                 Math.round((b / max) * 100)
@@ -159,24 +160,6 @@ export const ComparisonChart = ({
             Math.round((a / max) * 100),
             Math.round((b / max) * 100)
         ];
-    }
-
-
-    // format numbers compactly (e.g. 2.5B, 1.2M, or decimals as-is)
-    function formatValue(v: number): string {
-        // If v is a percentage (0–100 range for growth, etc.), show as is
-        // Otherwise, use compact notation for large numbers
-        if (Math.abs(v) < 1000) {
-            return v.toLocaleString(undefined, {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 0,
-            });
-        }
-        return new Intl.NumberFormat(undefined, {
-            notation: 'compact',
-            compactDisplay: 'short',
-            maximumFractionDigits: 2,
-        }).format(v);
     }
 
     // 4. Compute overall wins
@@ -285,7 +268,7 @@ export const ComparisonChart = ({
                                         </div>
 
                                         {/* Winner Indicator */}
-                                        <div className="text-lg w-[300px] font-semibold text-center">
+                                        <div className="text-lg w-[400px] font-semibold text-center">
                                             {rowWinner === 'Tie' ? '⚖️ Tie' : `🏆 ${rowWinner}`}
                                         </div>
                                     </div>

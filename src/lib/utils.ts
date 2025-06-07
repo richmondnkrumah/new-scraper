@@ -2,6 +2,7 @@
 import { _company_data } from "@/app/page";
 import yahooFinance from "yahoo-finance2";
 
+
 interface GeminiResponse {
   candidates?: Array<{
     content?: {
@@ -240,13 +241,13 @@ export async function convertCurrency(amount: number, from: string, to: string):
   const data = await res.json();
   // const data = JSON.parse(convert)
   const amounte = (data?.rates?.[to] * amount).toFixed(2);
-  console.log("Currency conversion response:", data,amounte);
-  return Number(amounte) || amount ;
+  console.log("Currency conversion response:", data, amounte);
+  return Number(amounte) || amount;
 }
 
 export async function normalizeCompanyCurrency(companyData_: _company_data, from: string, to = "USD") {
   // console.log("Normalizing company data currency from", from, "to", to);
-   const companyData = structuredClone(companyData_)
+  const companyData = structuredClone(companyData_)
 
   if (companyData?.financialData?.totalRevenue) {
     const raw = companyData.financialData.totalRevenue || null;

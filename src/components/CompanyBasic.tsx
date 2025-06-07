@@ -2,7 +2,9 @@
 import React, { useState } from 'react'
 import type { _company_data } from '@/app/page'
 import { parse } from 'tldts';
-import Image from 'next/image'
+
+
+
 type Props = {
     data: _company_data,
     logo: string
