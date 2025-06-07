@@ -34,7 +34,7 @@ const ChartPie = ({ data }: Props) => {
         (raw.freecashflow / total) * 100,
         (raw.grossProfit / total) * 100,
     ];
-    console.log(percentages)
+    // console.log(percentages)
     const labels = ['Market Cap', 'Revenue', 'Free cashflow ', 'Gross Profit',];
     const chartData = {
         labels: labels,

@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function TickerSelector({ onSelect, results }: Props) {
-    console.log(results, "TickerSelector Results");
+    // console.log(results, "TickerSelector Results");
     return (
         <div className="w-full">
             <ul className="mt-4 space-y-2">

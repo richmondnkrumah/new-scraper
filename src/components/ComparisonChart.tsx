@@ -55,8 +55,8 @@ export const ComparisonChart = ({
         "volume": company2Data?.summaryDetail?.volume,
     }
 
-    console.log(company1Name,company1Metrics)
-    console.log(company2Name,company2Metrics)
+    // console.log(company1Name,company1Metrics)
+    // console.log(company2Name,company2Metrics)
 
     const categories: {
         heading: string;
@@ -188,10 +188,10 @@ export const ComparisonChart = ({
         cat.metrics.forEach(({ key }) => {
             const a = company1Metrics[key];
             const b = company2Metrics[key];
-            console.log(a)
+            // console.log(a)
             // Skip metrics that are missing for both
             if (a === undefined || b === undefined) return;
-            console.log('yes')
+            // console.log('yes')
             if (a > b) company1Wins++;
             else if (b > a) company2Wins++;
             totalComparisons++;

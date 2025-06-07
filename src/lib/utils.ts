@@ -17,8 +17,6 @@ interface GeminiResponse {
 
 export async function getTickerFromCompanyName(name: string) {
   const result = await yahooFinance.search(name, {}, { validateResult: false });
-  // console.log(result)
-
   return (result.quotes[0] as { symbol: string } | undefined)?.symbol;
 
 }
@@ -247,7 +245,7 @@ export async function convertCurrency(amount: number, from: string, to: string):
 }
 
 export async function normalizeCompanyCurrency(companyData_: _company_data, from: string, to = "USD") {
-  console.log("Normalizing company data currency from", from, "to", to);
+  // console.log("Normalizing company data currency from", from, "to", to);
    const companyData = structuredClone(companyData_)
 
   if (companyData?.financialData?.totalRevenue) {
@@ -281,6 +279,6 @@ export async function normalizeCompanyCurrency(companyData_: _company_data, from
   if (companyData?.summaryDetail?.currency) {
     companyData.summaryDetail.currency = to;
   }
-  console.log("Normalized company data:", companyData);
+  // console.log("Normalized company data:", companyData);
   return companyData;
 }

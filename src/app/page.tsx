@@ -63,9 +63,9 @@ const page = () => {
       setNoTicker2(false);
       setNoTickerName2("");
     }
-    console.log(company1, company2)
-    console.log(res1)
-    console.log(res2)
+    // console.log(company1, company2)
+    // console.log(res1)
+    // console.log(res2)
     setResults1(res1);
     setResults2(res2);
     setGlobalLoading(false);
@@ -80,29 +80,29 @@ const page = () => {
     setFallbackUsed1(false);
     setCompany1Data(null);
     setCompany1Logo("");
-    console.log("start fetching here", ticker1)
+    // console.log("start fetching here", ticker1)
 
     const doAll = async () => {
       try {
         let data1 = null, logo1 = "";
         if (ticker1) {
           data1 = await getCompanyData(ticker1);
-          console.log(company1Symbol, "Company 1 Symbol")
+          // console.log(company1Symbol, "Company 1 Symbol")
           logo1 = await getCompanyLogo(company1Symbol);
-          console.log("Company 1 Logo:", logo1);
+          // console.log("Company 1 Logo:", logo1);
         }
         if (!data1 || Object.keys(data1?.summaryProfile!).length < 6) {
           setFallbackUsed1(true);
           data1 = await getCompanyDataFromGemini(company1Symbol);
-          console.log("Using fallback for company 1:", data1);
+          // console.log("Using fallback for company 1:", data1);
         }
         if (data1?.summaryDetail.currency && data1.summaryDetail.currency !== "USD") {
           data1 = await normalizeCompanyCurrency(data1, data1.summaryDetail.currency, "USD");
-          console.log("Normalized company 1 data:", data1);
+          // console.log("Normalized company 1 data:", data1);
         }
         setCompany1Data(data1);
         setCompany1Logo(logo1);
-        console.log("Company 1 Data:", data1);
+        // console.log("Company 1 Data:", data1);
       }
       catch (error) {
         console.error("Error fetching company 1 data:", error);
@@ -122,7 +122,7 @@ const page = () => {
     setFallbackUsed2(false);
     setCompany2Data(null);
     setCompany2Logo("");
-    console.log("start fetching here", ticker2)
+    // console.log("start fetching here", ticker2)
 
     const doAll = async () => {
       try {
@@ -130,23 +130,23 @@ const page = () => {
         let data2 = null, logo2 = "";
         if (ticker2) {
           data2 = await getCompanyData(ticker2);
-          console.log(company2Symbol, "Company 2 Symbol")
+          // console.log(company2Symbol, "Company 2 Symbol")
           logo2 = await getCompanyLogo(company2Symbol);
         }
         if (!data2 || Object.keys(data2?.summaryProfile!).length < 6) {
           setFallbackUsed2(true);
           data2 = await getCompanyDataFromGemini(company2Symbol);
-          console.log("Using fallback for company 1:", data2);
+          // console.log("Using fallback for company 1:", data2);
         }
         if (data2?.summaryDetail.currency && data2.summaryDetail.currency !== "USD") {
           data2 = await normalizeCompanyCurrency(data2, data2.summaryDetail.currency, "USD");
         }
         setCompany2Data(data2);
         setCompany2Logo(logo2);
-        console.log("Company 2 Data:", data2);
+        // console.log("Company 2 Data:", data2);
       }
       catch (error) {
-        console.error("Error fetching company 2 data:", error);
+        // console.error("Error fetching company 2 data:", error);
         setError2(true);
       }
       setLoading2(false);

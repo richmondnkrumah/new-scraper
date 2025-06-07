@@ -20,7 +20,7 @@ const CompanyAdditional = ({ data }: Props) => {
         "Description": data?.summaryProfile?.longBusinessSummary,
         
     }
-    console.log(additionalDetailsData,"Additional")
+    // console.log(additionalDetailsData,"Additional")
     
 
     return (
