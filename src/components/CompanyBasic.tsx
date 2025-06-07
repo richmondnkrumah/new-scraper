@@ -7,7 +7,7 @@ type Props = {
     logo: string
 }
 
-const CompanyBasic = ({ data,logo }: Props) => {
+const CompanyBasic = ({ data, logo }: Props) => {
     const summarizedData = {
         "Company Name": data?.price?.longName,
         "Industry": data?.summaryProfile?.industry,
@@ -15,12 +15,12 @@ const CompanyBasic = ({ data,logo }: Props) => {
         "Country": data?.summaryProfile?.country,
         "Sector": data?.summaryProfile?.sector,
     }
-    console.log(summarizedData,"Basic")
+
     return (
         <div className="border-gray-200 p-3 rounded-xl bg-gray-100">
             <div className='flex items-center justify-between'>
                 <h2 className="text-xl font-bold text-blue-800">{data?.price?.symbol}</h2>
-                <Image src={`https://cdn.brandfetch.io/${summarizedData.Website}/w/400/h/400?c=1id_2I0zC2VtTcLOq9q`} width={60} height={60} alt="Company Logo"/>
+                <img className="w-20 h-20" src={`https://cdn.brandfetch.io/${summarizedData?.Website?.replace("https://www.","")}/w/400/h/400?c=1id_2I0zC2VtTcLOq9q`} alt="Company Logo" />
             </div>
             {Object.entries(summarizedData).map(([key, value]) => (
                 <div key={key} className="flex gap-2">
