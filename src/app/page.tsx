@@ -157,7 +157,10 @@ const page = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-4 flex flex-col min-h-[100dvh]">
-      <h1 className="font-bold mb-6 text-center text-4xl">Competitor Comparison</h1>
+      <div className="text-center">
+        <h1 className="font-bold mb-6 text-center text-4xl">Competitor Comparison</h1>
+        <p>📢 Tip: Enter the exact company name (as registered) to get the most reliable and detailed comparison.</p>
+      </div>
       <div className="w-full p-4 ">
         <form className="flex gap-5 " onSubmit={getTickers}>
           <div className="grow">
