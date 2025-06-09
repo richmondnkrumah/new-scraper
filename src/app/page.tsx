@@ -156,15 +156,15 @@ const page = () => {
   }, [ticker2])
 
   return (
-    <div className="max-w-7xl mx-auto p-4 flex flex-col min-h-[100dvh]">
+    <div className="max-w-7xl gap-2  mx-auto p-2 sm:p-4 flex flex-col min-h-[100dvh]">
       <div className="text-center">
-        <h1 className="font-bold mb-6 text-center text-4xl">Competitor Comparison</h1>
-        <p>📢 Tip: Enter the exact company name (as registered) to get the most reliable and detailed comparison.</p>
+        <h1 className="font-bold mb-2 sm:mb-6 text-center text-2xl sm:text-4xl">Competitor Comparison</h1>
+        <p className="text-sm sm:text-lg">📢 Tip: Enter the exact company name (as registered) to get the most reliable and detailed comparison.</p>
       </div>
-      <div className="w-full p-4 ">
-        <form className="flex gap-5 " onSubmit={getTickers}>
+      <div className="w-full sm:p-4 ">
+        <form className="flex gap-2 sm:gap-5 " onSubmit={getTickers}>
           <div className="grow">
-            <label className="block text-lg mb-2 font-semibold">Company 1</label>
+            <label className="block sm:text-lg mb-2 font-semibold">Company 1</label>
             <input
               type="text"
               required
@@ -174,9 +174,9 @@ const page = () => {
               onChange={e => setCompany1(e.target.value)}
             />
           </div>
-          <button className="bg-blue-500 font-semibold w-fit self-end  p-3 rounded-lg text-white">Compare</button>
+          <button className="bg-blue-500 text-sm font-semibold  w-fit self-end px-2 py-3 sm:px-3 sm:py-3 rounded-lg text-white">Compare</button>
           <div className="grow">
-            <label className="block text-lg mb-2 font-semibold">Company 2</label>
+            <label className="block sm:text-lg mb-2 font-semibold">Company 2</label>
             <input
               type="text"
               required
@@ -195,19 +195,14 @@ const page = () => {
         </div>
           :
           (
-            <div className="grid grid-cols-2 gap-x-10 px-4 h-full">
+            <div className="sm:grid sm:grid-cols-2 sm:gap-x-10 sm:px-4 h-full">
               {
                 fallbackUsed1 &&
                 <div className=" flex flex-col justify-between bg-yellow-200 p-4">
                   {<li>Data for <strong>{company1}</strong> was incomplete on Yahoo Finance. Fetched from Gemini AI instead.</li>}
                 </div>
               }
-              {
-                fallbackUsed2 &&
-                <div className=" flex flex-col justify-between bg-yellow-200 p-4">
-                  {<li>Data for <strong>{company2}</strong> was incomplete on Yahoo Finance. Fetched from Gemini AI instead.</li>}
-                </div>
-              }
+
               {
                 loading1 && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center">
                   <div className="loader"></div>
@@ -215,22 +210,25 @@ const page = () => {
                 </div>
               }
               {results1.length > 0 && (
-                <TickerSelector
-                  results={results1}
-                  onSelect={(selected, symbol) => {
-                    console.log("Selected Ticker 1:", selected);
-                    setCompany1Symbol(symbol);
-                    SetTicker1(prev => {
-                      if (prev === selected) return "";
-                      return selected;
-                    }); setResults1([]);
-                  }}
-                />
+                <>
+                  <p className="sm:hidden text-center font-semibold pt-1">Company 1 Results</p>
+                  <TickerSelector
+                    results={results1}
+                    onSelect={(selected, symbol) => {
+                      console.log("Selected Ticker 1:", selected);
+                      setCompany1Symbol(symbol);
+                      SetTicker1(prev => {
+                        if (prev === selected) return "";
+                        return selected;
+                      }); setResults1([]);
+                    }}
+                  />
+                </>
               )}
               {/* Main comparison cards side-by-side */}
               {(company1Data || noTicker1 || error1) && (
-                <div className="flex gap-10 px-4 py-6 ">
-                  <div className="flex w-full flex-col justify-between bg-white rounded-xl p-4 shadow">
+                <div className="flex gap-10 px-1 sm:px-4 py-6 ">
+                  <div className="flex w-full flex-col justify-between bg-white rounded-xl p-2 sm:p-4 shadow">
                     {
                       error1 && (
                         <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center text-red-600">
@@ -243,6 +241,7 @@ const page = () => {
                       <NoTickerFound name={noTickerName1} />
                     ) : company1Data ? (
                       <>
+                        <p className="sm:hidden text-center font-semibold pb-1">Company 1 Results</p>
                         <CompanyBasic data={company1Data} logo={company1Logo} />
                         <CompanyAdditional data={company1Data} />
                         <ChartPie data={company1Data} />
@@ -253,30 +252,40 @@ const page = () => {
                 </div>
               )}
               {
+                fallbackUsed2 &&
+                <div className=" flex flex-col justify-between bg-yellow-200 p-4">
+                  {<li>Data for <strong>{company2}</strong> was incomplete on Yahoo Finance. Fetched from Gemini AI instead.</li>}
+                </div>
+              }
+              {
                 loading2 && <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center">
                   <div className="loader"></div>
                   <p className="text-xl font-semibold text-gray-800">Getting {ticker2} Data</p>
                 </div>
               }
+
               {results2.length > 0 && (
-                <TickerSelector
-                  results={results2}
-                  onSelect={(selected, symbol) => {
-                    console.log("Selected Ticker 2:", selected);
-                    setCompany2Symbol(symbol);
-                    SetTicker2(prev => {
-                      if (prev === selected) return "";
-                      return selected;
-                    });
-                    setResults2([]);
-                  }}
-                />
+                <>
+                  <p className=" sm:hidden text-center font-semibold pb-1">Company 2 Results</p>
+                  <TickerSelector
+                    results={results2}
+                    onSelect={(selected, symbol) => {
+                      console.log("Selected Ticker 2:", selected);
+                      setCompany2Symbol(symbol);
+                      SetTicker2(prev => {
+                        if (prev === selected) return "";
+                        return selected;
+                      });
+                      setResults2([]);
+                    }}
+                  />
+                </>
               )}
               {/* Main comparison cards side-by-side */}
               {(company2Data || noTicker2 || error2) && (
-                <div className="flex gap-10 px-4 py-6">
+                <div className="flex gap-10 px-1 sm:px-4 py-6">
 
-                  <div className="flex w-full flex-col justify-between bg-white rounded-xl p-4 shadow">
+                  <div className="flex w-full flex-col justify-between bg-white rounded-xl p-2 sm:p-4 shadow">
                     {
                       error2 && (
                         <div className="h-full py-5 grow flex flex-col gap-2 justify-center items-center text-red-600">
@@ -289,6 +298,7 @@ const page = () => {
                       <NoTickerFound name={noTickerName2} />
                     ) : company2Data ? (
                       <>
+                        <p className="sm:hidden text-center font-semibold pt-1">Company 2 Results</p>
                         <CompanyBasic data={company2Data} logo={company2Logo} />
                         <CompanyAdditional data={company2Data} />
                         <ChartPie data={company2Data} />
@@ -305,7 +315,7 @@ const page = () => {
 
       {/* Final Comparison Chart below both */}
       {company1Data && company2Data && (
-        <div className="px-4 py-6">
+        <div className="sm:px-4 py-6">
           <ComparisonChart company1Data={company1Data} company2Data={company2Data} />
         </div>
       )}

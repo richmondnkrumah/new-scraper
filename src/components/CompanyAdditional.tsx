@@ -27,15 +27,15 @@ const CompanyAdditional = ({ data }: Props) => {
 
     return (
         <div className=' h-full flex flex-col gap-5'>
-            <span className="cursor-pointer underline text-blue-500" onClick={() => setShowDetails(prev => !prev)}>{!showDetails ? "click to see more": "click to hide more"}</span>
+            <span className="pl-3 cursor-pointer underline text-blue-500" onClick={() => setShowDetails(prev => !prev)}>{!showDetails ? "click to see more": "click to hide more"}</span>
             {
                 showDetails &&
                 <div className="border-gray-200 p-3 h-full rounded-xl bg-gray-100">
-                    <h2 className='text-2xl text-black mb-2 font-bold text-center'>Additional Details</h2>
+                    <h2 className='text-xl sm:text-2xl text-black mb-2 font-bold text-center'>Additional Details</h2>
                     {Object.entries(additionalDetailsData).map(([key, value]) => (
                         <div key={key} className="flex gap-2">
-                            <span className="text-md font-bold text-black">{key}: </span>
-                            <p className="text-base text-black">{String(value)}</p>
+                            <span className="text-sm sm:text-md font-bold text-black">{key}: </span>
+                            <p className="text-sm sm:text-base text-black">{String(value)}</p>
                         </div>
                     ))}
                     {
@@ -46,7 +46,7 @@ const CompanyAdditional = ({ data }: Props) => {
                                     {
                                         description.map((line, index) => (
                                             line.trim() &&
-                                            <li key={index} className="text-base text-black">
+                                            <li key={index} className="text-sm sm:text-base text-black">
                                                 {line.trim() + (index < description.length - 1 ? '.' : '')}
                                             </li>
                                         ))
