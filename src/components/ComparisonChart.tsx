@@ -19,8 +19,8 @@ export const ComparisonChart = ({
     const company1Metrics: CompanyMetrics = {
         "marketCap": company1Data?.summaryDetail?.marketCap,
         "totalRevenue": company1Data?.financialData?.totalRevenue,
-        "grossMargins": company1Data?.financialData?.grossMargins,
-        "profitMargins": company1Data?.financialData?.profitMargins,
+        "grossMargins": company1Data?.financialData?.grossMargins! * 100,
+        "profitMargins": company1Data?.financialData?.profitMargins! * 100,
         "freeCashflow": company1Data?.financialData?.freeCashflow,
         "trailingPE": company1Data?.summaryDetail?.trailingPE,
         "forwardPE": company1Data?.summaryDetail?.forwardPE,
@@ -28,8 +28,8 @@ export const ComparisonChart = ({
         "priceToBook": company1Data?.defaultKeyStatistics?.priceToBook,
         "debtToEquity": company1Data?.financialData?.debtToEquity,
         "beta": company1Data?.summaryDetail?.beta,
-        "heldPercentInstitutions": company1Data?.majorHoldersBreakdown?.institutionsPercentHeld,
-        "insidersPercentHeld": company1Data?.majorHoldersBreakdown?.insidersPercentHeld,
+        "heldPercentInstitutions": company1Data?.majorHoldersBreakdown?.institutionsPercentHeld! * 100,
+        "insidersPercentHeld": company1Data?.majorHoldersBreakdown?.insidersPercentHeld! * 100,
         "grossprofit": company1Data?.financialData?.grossProfits,
         "employees": company1Data?.summaryProfile?.fullTimeEmployees,
         "averageVolume": company1Data?.summaryDetail?.averageVolume,
@@ -39,8 +39,8 @@ export const ComparisonChart = ({
     const company2Metrics: CompanyMetrics = {
         "marketCap": company2Data?.summaryDetail?.marketCap,
         "totalRevenue": company2Data?.financialData?.totalRevenue,
-        "grossMargins": company2Data?.financialData?.grossMargins,
-        "profitMargins": company2Data?.financialData?.profitMargins,
+        "grossMargins": company2Data?.financialData?.grossMargins! *100,
+        "profitMargins": company2Data?.financialData?.profitMargins! * 100,
         "freeCashflow": company2Data?.financialData?.freeCashflow,
         "trailingPE": company2Data?.summaryDetail?.trailingPE,
         "forwardPE": company2Data?.summaryDetail?.forwardPE,
@@ -48,8 +48,8 @@ export const ComparisonChart = ({
         "priceToBook": company2Data?.defaultKeyStatistics?.priceToBook,
         "debtToEquity": company2Data?.financialData?.debtToEquity,
         "beta": company2Data?.summaryDetail?.beta,
-        "heldPercentInstitutions": company2Data?.majorHoldersBreakdown?.institutionsPercentHeld,
-        "insidersPercentHeld": company2Data?.majorHoldersBreakdown?.insidersPercentHeld,
+        "heldPercentInstitutions": company2Data?.majorHoldersBreakdown?.institutionsPercentHeld! * 100,
+        "insidersPercentHeld": company2Data?.majorHoldersBreakdown?.insidersPercentHeld! * 100,
         "grossprofit": company2Data?.financialData?.grossProfits,
         "employees": company2Data?.summaryProfile?.fullTimeEmployees,
         "averageVolume": company2Data?.summaryDetail?.averageVolume,
@@ -145,10 +145,11 @@ export const ComparisonChart = ({
 
         // If both values are negative
         if (a < 0 && b < 0) {
-            const max = Math.max(a, b);
+            // const max = Math.max(a, b);
+            const min = Math.min(a, b);
             return [
-                Math.round((a / max) * 100),
-                Math.round((b / max) * 100)
+                Math.round((b / min) * 100),
+                Math.round((a / min) * 100)
             ];
         }
 
@@ -200,7 +201,7 @@ export const ComparisonChart = ({
 
     return (
         <div className="space-y-6 mb-10">
-            <h1 className="font-bold mb-6 text-center text-4xl">{company1Name} vs {company2Name}</h1>
+            <h1 className="font-bold mb-6 text-center text-2xl sm:text-4xl">{company1Name} vs {company2Name}</h1>
 
             {/* Comparison Table */}
             <div className="space-y-8">
@@ -234,35 +235,35 @@ export const ComparisonChart = ({
                                 return (
                                     <div
                                         key={key}
-                                        className="flex gap-5 items-center py-2"
+                                        className="flex flex-col sm:flex-row gap-2 items-center py-2"
                                     >
                                         {/* Metric Label */}
-                                        <div className="text-md w-[400px] font-medium text-gray-700">{label}</div>
+                                        <div className="text-md text-center w-[400px] font-medium text-gray-700">{label}</div>
 
                                         {/* Company 1 Bar */}
-                                        <div className="w-full h-10 flex gap-10 rounded">
-                                            <div className="relative w-full bg-gray-200">
+                                        <div className="w-full h-10 flex  gap-2 sm:gap-10 rounded">
+                                            <div className="relative grow bg-gray-200">
                                                 <div
                                                     className="absolute left-0 top-0 h-10 bg-blue-500 rounded"
                                                     style={{ width: `${pctA}%` }}
                                                 >
                                                 </div>
                                             </div>
-                                            <span className="self-center text-lg font-semibold text-black">
+                                            <span className="self-center w-[65px] text-md sm:text-lg  text-end font-semibold text-black">
                                                 {formatValue(valA)}
                                             </span>
                                         </div>
 
                                         {/* Company 2 Bar */}
-                                        <div className=" w-full h-10 flex gap-10  rounded">
-                                            <div className="relative grow bg-gray-200">
+                                        <div className=" w-full h-10 flex gap-2 sm:gap-10  rounded">
+                                            <div className="relative grow bg-gray-200 ">
                                                 <div
                                                     className="absolute left-0 top-0 h-10 bg-orange-500 rounded"
                                                     style={{ width: `${pctB}%` }}
                                                 >
                                                 </div>
                                             </div>
-                                            <span className="text-lg self-center  font-semibold text-black">
+                                            <span className=" w-[65px] text-md self-center sm:text-lg text-end font-semibold text-black">
                                                 {formatValue(valB)}
                                             </span>
                                         </div>
